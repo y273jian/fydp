@@ -1,0 +1,1 @@
+CREATE ROLE tmp_dbuser LOGIN PASSWORD 'resetme';

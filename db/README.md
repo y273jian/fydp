@@ -18,9 +18,9 @@ sudo apt-get -y install postgresql
 ```
 sudo service postgresql start
 ```
-3. connect to `PostgreSQL`, default `<rolename>`: postgres
+3. connect to `PostgreSQL` with `postgres`
 ```
-sudo -i -u <rolename>
+sudo -i -u postgres
 ```
 4. access the `PostgreSQL`
 ```
