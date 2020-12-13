@@ -1,0 +1,5 @@
+data/obj_train_data/deer5.jpg
+data/obj_train_data/deer4.jpg
+data/obj_train_data/deer3.jpg
+data/obj_train_data/deer2.jpg
+data/obj_train_data/deer1.jpg
