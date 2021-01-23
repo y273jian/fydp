@@ -6,6 +6,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS central_hub (
     ch_id uuid UNIQUE DEFAULT uuid_generate_v4(),
+    ch_serial VARCHAR UNIQUE,
     ip_addr inet,
     PRIMARY KEY (ch_id)
 );
@@ -13,7 +14,8 @@ CREATE TABLE IF NOT EXISTS central_hub (
 CREATE TABLE IF NOT EXISTS camera_info (
     camera_id uuid UNIQUE DEFAULT uuid_generate_v4(),
     ch_id uuid,
-    serial_number uuid UNIQUE,
+    serial_number VARCHAR UNIQUE,
+    camera_alias VARCHAR,
     latitude DECIMAL,
     longitude DECIMAL,
     altitude DECIMAL,
@@ -44,6 +46,8 @@ CREATE TABLE IF NOT EXISTS user_info (
     salt VARCHAR NOT NULL,
     first_name VARCHAR,
     last_name VARCHAR,
+    signup_date TIMESTAMP,
+    last_login_time TIMESTAMP,
     PRIMARY KEY (user_id)
 );
 
@@ -58,7 +62,8 @@ CREATE TABLE IF NOT EXISTS role_of_user (
 
 CREATE TABLE IF NOT EXISTS image_info (
     image_id uuid UNIQUE DEFAULT uuid_generate_v4(),
-    file_path text,
+    ori_file_path text,
+    ext_file_path text,
     size INT, -- [Bytes]
     width INT, -- [px]
     height INT, -- [px]
@@ -78,29 +83,32 @@ CREATE TABLE IF NOT EXISTS extracted_data (
     record_id uuid UNIQUE DEFAULT uuid_generate_v4(),
     type_id INT,
     amount INT,
+    image_id uuid,
     processed_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_viewed BOOLEAN,
     viewed_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (record_id),
-    FOREIGN KEY (type_id) REFERENCES wildlife_types
+    FOREIGN KEY (type_id) REFERENCES wildlife_types,
+    FOREIGN KEY (image_id) REFERENCES image_info,
 );
 
 CREATE TABLE IF NOT EXISTS corrected_data (
-    corrected_id uuid UNIQUE DEFAULT uuid_generate_v4(),
+    extracted_id uuid, 
     amount INT,
     type_id INT,
     user_id uuid,
     corrected_time TIMESTAMP,
-    PRIMARY KEY (corrected_id),
+    PRIMARY KEY (extracted_id),
+    FOREIGN KEY (extracted_id) REFERENCES extracted_data,
     FOREIGN KEY (type_id) REFERENCES wildlife_types,
     FOREIGN KEY (user_id) REFERENCES user_info
 );
 
-CREATE TABLE IF NOT EXISTS record_to_correct (
-    record_to_correct_id SERIAL,
-    corrected_id uuid,
-    record_id uuid,
-    PRIMARY KEY (record_to_correct_id),
-    FOREIGN KEY (corrected_id) REFERENCES corrected_data,
-    FOREIGN KEY (record_id) REFERENCES extracted_data
-);
+-- CREATE TABLE IF NOT EXISTS record_to_correct (
+--     record_to_correct_id SERIAL,
+--     corrected_id uuid,
+--     record_id uuid,
+--     PRIMARY KEY (record_to_correct_id),
+--     FOREIGN KEY (corrected_id) REFERENCES corrected_data,
+--     FOREIGN KEY (record_id) REFERENCES extracted_data
+-- );

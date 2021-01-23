@@ -14,15 +14,18 @@ import {
   NavbarText
 } from 'reactstrap';
 
+import { Link, } from 'react-router-dom'
+import handleLogout from '../actions/logout'
+
 const CustomNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
-
+  
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">WMS</NavbarBrand>
+        <NavbarBrand href='/'>WMS</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
@@ -50,8 +53,20 @@ const CustomNavbar = () => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
-          <NavbarText>Simple Text</NavbarText>
         </Collapse>
+        {(!localStorage.getItem('access_token'))?(
+          <NavbarText>
+            <Link to='/login'>
+              Login
+            </Link>
+          </NavbarText>
+        ):(
+          <NavbarText>
+            <button type='button' className='btn btn-outline-dark' onClick={handleLogout}>
+              Log Out
+            </button>
+          </NavbarText>
+        )}
       </Navbar>
     </div>
   );

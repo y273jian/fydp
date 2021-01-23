@@ -12,10 +12,11 @@ from django.db import models
 
 class CameraInfo(models.Model):
     camera_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    ch = models.ForeignKey('CentralHub', models.CASCADE, blank=True, null=True)
-    serial_number = models.UUIDField(unique=True, blank=True, null=True)
-    latitude = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
-    longitude = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
+    ch = models.ForeignKey('CentralHub', models.CASCADE, related_name='camera_infos', blank=True, null=True)
+    serial_number = models.CharField(max_length=255, blank=True, null=True)
+    camera_alias = models.CharField(max_length=255, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=65535, decimal_places=7, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=65535, decimal_places=7, blank=True, null=True)
     altitude = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
     setup_date = models.DateTimeField(blank=True, auto_now_add=True)
     battery_level = models.IntegerField(blank=True, null=True)
@@ -33,7 +34,8 @@ class CameraInfo(models.Model):
 
 
 class CentralHub(models.Model):
-    ch_id = models.UUIDField(primary_key=True)
+    ch_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    ch_serial = models.CharField(max_length=255, blank=True, null=True)
     ip_addr = models.GenericIPAddressField(blank=True, null=True)
 
     class Meta:
@@ -42,22 +44,22 @@ class CentralHub(models.Model):
 
 
 class CorrectedData(models.Model):
-    corrected_id = models.UUIDField(primary_key=True)
+    extracted = models.OneToOneField('ExtractedData', models.CASCADE, related_name='corrected_data', primary_key=True)
     amount = models.IntegerField(blank=True, null=True)
-    type = models.ForeignKey('WildlifeTypes', models.CASCADE, blank=True, null=True)
-    user = models.ForeignKey('UserInfo', models.CASCADE, blank=True, null=True)
-    corrected_time = models.DateTimeField(blank=True, null=True)
+    type = models.ForeignKey('WildlifeTypes', models.CASCADE, related_name='corrected_data', blank=True, null=True)
+    user = models.ForeignKey('UserInfo', models.CASCADE, related_name='corrected_data', blank=True, null=True)
+    corrected_time = models.DateTimeField(blank=True, auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'corrected_data'
 
-
 class ExtractedData(models.Model):
-    record_id = models.UUIDField(primary_key=True)
-    type = models.ForeignKey('WildlifeTypes', models.CASCADE, blank=True, null=True)
+    record_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    type = models.ForeignKey('WildlifeTypes', models.CASCADE, related_name='extracted_data', blank=True, null=True)
     amount = models.IntegerField(blank=True, null=True)
-    processed_time = models.DateTimeField(blank=True, null=True)
+    image = models.ForeignKey('ImageInfo', models.CASCADE, related_name='extracted_data', blank=True, null=True)
+    processed_time = models.DateTimeField(blank=True, auto_now_add=True)
     is_viewed = models.BooleanField(blank=True, null=True)
     viewed_time = models.DateTimeField(blank=True, null=True)
 
@@ -65,29 +67,19 @@ class ExtractedData(models.Model):
         managed = False
         db_table = 'extracted_data'
 
-
 class ImageInfo(models.Model):
-    image_id = models.UUIDField(primary_key=True)
-    file_path = models.TextField(blank=True, null=True)
-    size = models.IntegerField(blank=True, null=True)
+    image_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    ori_file_path = models.TextField(blank=True, null=True)
+    ext_file_path = models.TextField(blank=True, null=True)
+    size = models.DecimalField(max_digits=65535, decimal_places=2, blank=True, null=True)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    taken_camera = models.ForeignKey(CameraInfo, models.CASCADE, blank=True, null=True)
-    taken_time = models.DateTimeField(blank=True, null=True)
+    taken_camera = models.ForeignKey(CameraInfo, models.CASCADE, related_name='image_infos', blank=True, null=True)
+    taken_time = models.DateTimeField(blank=True, auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'image_info'
-
-
-class RecordToCorrect(models.Model):
-    record_to_correct_id = models.AutoField(primary_key=True)
-    corrected = models.ForeignKey(CorrectedData, models.CASCADE, blank=True, null=True)
-    record = models.ForeignKey(ExtractedData, models.CASCADE, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'record_to_correct'
 
 
 class RoleOfUser(models.Model):
@@ -107,7 +99,8 @@ class UserInfo(models.Model):
     salt = models.CharField(max_length=255)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
-
+    signup_date = models.DateTimeField(blank=True, null=True),
+    last_login_time = models.DateTimeField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'user_info'
@@ -124,9 +117,10 @@ class UserRole(models.Model):
 
 
 class WildlifeTypes(models.Model):
-    type_id = models.UUIDField(primary_key=True)
+    type_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'wildlife_types'
+

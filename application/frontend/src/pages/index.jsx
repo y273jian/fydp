@@ -10,13 +10,19 @@ const MainPage = () => {
       <h6>Home</h6>
       <div>
         <div>
-          <Link to='/users'>Show List of Users</Link>
+          <Link to='/charts'>Charts</Link>
         </div>
         <div>
-          <Link to='/records'>Show List of Records</Link>
+          <Link to='/cameras'> Cameras</Link>
         </div>
         <div>
-          <Link to='/cameras'>Show List of Cameras</Link>
+          <Link to='/maps'>Map</Link>
+        </div>
+        <div>
+          <Link to='/records'>Records</Link>
+        </div>
+        <div>
+          <Link to='/gallery'>Gallery</Link>
         </div>
       </div>
     </Container>

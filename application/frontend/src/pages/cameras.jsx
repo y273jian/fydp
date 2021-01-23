@@ -1,12 +1,12 @@
 // import logo from './logo.svg';
 import { Component } from 'react'
-import { Row, Col, Table } from 'reactstrap'
-import axios from 'axios'
+import { Container, Row, Col, Table } from 'reactstrap'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import BackButton from '../components/BackButton'
+import axiosInstance from '../actions/axiosApi'
 // const cameraItems = [
 //   {
 //     camera_id: '3fa2c882-5b5e-4807-b14f-890a8d0ac7fd',
@@ -33,7 +33,7 @@ class CamerasPage extends Component {
     this.refreshList();
   }
   refreshList = () => {
-    axios
+    axiosInstance
       .get('/api/cameras/')
       .then(res => {
         res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
@@ -42,7 +42,6 @@ class CamerasPage extends Component {
       })
       .catch(err => console.log(err))
   }
-  createItem = () => {}
   renderItems = () => {
     const newItems = this.state.cameraList
     return newItems.map((item, index) => (
@@ -80,11 +79,12 @@ class CamerasPage extends Component {
 
   render() {
     return (
-      <main className='container'>
+      <Container>
         <Row>
           <Col md='4' className='p-0'>
             <BackButton
-              url='/'  
+              url='/'
+              text='Back to Home'
             />
           </Col>
           <h3 className='col-md-4 text-center p-0'> Camera Information </h3>
@@ -104,7 +104,7 @@ class CamerasPage extends Component {
             
           </div>
         </Row>
-        <div className='row'>
+        <Row>
           <div className="col-md-12 col-sm-10 mx-auto p-0">
             <Table bordered striped dark hover className='middleTable'>
               <thead>
@@ -122,31 +122,11 @@ class CamerasPage extends Component {
               </tbody>
             </Table>
           </div>
-        </div>
+        </Row>
         
-      </main>
+      </Container>
     )
   }  
 }
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
 
 export default CamerasPage

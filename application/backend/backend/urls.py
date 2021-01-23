@@ -17,13 +17,19 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from wms import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = routers.DefaultRouter()
 router.register(r'cameras', views.CameraView, 'camera')
 router.register(r'central_hubs', views.CentralHubView, 'central_hub')
-router.register(r'records_to_corrected', views.RecordToCorrectView, 'record_to_corrected')
+router.register(r'images', views.ImageInfoView, 'image')
+router.register(r'extracted_data', views.ExtractedDataView, 'extracted_data')
+router.register(r'corrected_data', views.CorrectedDataView, 'corrected_data')
+router.register(r'upload', views.UploadViewSet, 'upload')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),    
+    path('api/', include('wms.urls')),
     path('api/', include(router.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,7 +1,8 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { Component } from 'react'
 import { Container, Row, Col, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import BackButton from '../components/BackButton'
+import axiosInstance from '../actions/axiosApi'
 
 class CameraDetailPage extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class CameraDetailPage extends Component {
       camera: {},
       edit: this.props.location.state.edit,
       modal: false,
-      delete: false
+      delete: false,
+      created: false,
     }
   }
   componentDidMount () {
@@ -43,15 +45,16 @@ class CameraDetailPage extends Component {
 
     console.log('handle submit camera: ', camera)
     if (camera.camera_id) {
-      axios
+      axiosInstance
         .put(`/api/cameras/${camera.camera_id}/`, camera)
         .then(() => this.refreshPage(camera.camera_id));
       return;
     }
-    axios
+    axiosInstance
       .post('/api/cameras/', camera)
       .then((res) => {
         console.log('POST res: ', res.data)
+        this.setState({created: true})
         this.refreshPage(res.data.camera_id)
         
       });
@@ -59,20 +62,23 @@ class CameraDetailPage extends Component {
 
   handleDelete = camera => {
     console.log('handle delete', camera)
-    axios
+    axiosInstance
       .delete(`/api/cameras/${camera.camera_id}`)
   }
 
   refreshPage = (cameraId) => {
     // console.log(this.state.edit)
-    this.props.history.push({
-      pathname: `/cameras/${cameraId}`,
-      state: {
-        edit: false
-      }
-    });
+    if (this.state.created) {
+      this.props.history.push({
+        pathname: `/cameras/${cameraId}`,
+        state: {
+          edit: false
+        }
+      })
+    }
+    
     if (!this.state.edit) {
-      axios
+      axiosInstance
         .get(`/api/cameras/${cameraId}`)
         .then(res => {
           res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
@@ -219,12 +225,13 @@ class CameraDetailPage extends Component {
           <Label md={{ size: 3, offset: 2}} className='text-right'><b>Location: </b></Label>
           {!this.state.edit ? (
             <Col md='5' className='col-form-label'>{
-              (camera.latitude != '' && camera.longitude != '') ? (
-                `${camera.latitude} ${(camera.latitude)>0?' N':' S'}, \
-                ${camera.longitude} ${(camera.longitude)>0?' E':' W'}`
-              ) : (
-                'no record'
-              )
+              (camera.latitude != '' && camera.longitude != '' && 
+              camera.latitude !== undefined && camera.longitude !== undefined ) ? (
+                  `${(camera.latitude)>0?camera.latitude+' N':camera.latitude.substring(1)+' S'}, \
+                  ${(camera.longitude)>0?camera.longitude+' E':camera.longitude.substring(1)+' W'}`
+                ) : (
+                  'no record'
+                )
             }</Col>
           ) : (
             <Col md='5'>
@@ -319,6 +326,7 @@ class CameraDetailPage extends Component {
           <Col md='4' className='p-0'>
             <BackButton
               url='/cameras'
+              text='Back to Camera List'
             />
           </Col>
           <Col md='4' className='p-0 text-center'><h4>Camera Detail</h4></Col>
@@ -329,9 +337,6 @@ class CameraDetailPage extends Component {
         </Container>
       
         <Container hidden={this.state.delete}>
-        
-          
-        
           {this.renderDetails(camera)}
           <Row>
             <Col md={{ size: 2, offset: 2 }}>

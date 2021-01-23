@@ -6,7 +6,7 @@ const BackButton = (props) => {
   return (
     <Link to={`${props.url}`}>
       <button type="button" className="btn btn-back">
-        <FontAwesomeIcon icon={faCaretLeft} />{' '}<b>Back</b>
+        <FontAwesomeIcon icon={faCaretLeft} />{' '}<b>{props.text}</b>
       </button>
     </Link>
   )
