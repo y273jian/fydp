@@ -1,0 +1,9 @@
+log
+.vscode
+venv
+**/__pycache__/**
+
+**/images
+*.pyc
+**/media
+application/backend/wms/__pycache__/views.cpython-38.pyc
