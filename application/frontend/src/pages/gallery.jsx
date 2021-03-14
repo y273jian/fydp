@@ -45,7 +45,7 @@ export default class GalleryPage extends Component {
     }
 
     axiosInstance
-      .get(`/api/images/${imageId}`)
+      .get(`/api/images/${imageId}/`)
       .then(res => {
         res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
         console.log(res.data)
@@ -64,9 +64,9 @@ export default class GalleryPage extends Component {
     }
     let reduce = _.reduce(list, (result, entry) => {
       let item = {}
-      if (entry.file_path !== '') {
-        item['original'] = entry.file_path
-        console.log('entry.file_path', entry)
+      if (entry.ext_file_path !== '') {
+        item['original'] = 'http://localhost:8000'+entry.ext_file_path
+        console.log('entry.ext_file_path', entry)
         // item['originalAlt'] = entry.image_id
         result.push(item)
         console.log('original', item['original'])

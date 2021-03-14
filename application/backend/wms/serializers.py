@@ -18,7 +18,7 @@ class CentralHubSerializer(serializers.ModelSerializer):
 class CameraInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = CameraInfo
-        fields = ['camera_id', 'battery_level', 'latitude', 'longitude', 'setup_date', 'last_active_time']
+        fields = ['camera_id', 'camera_alias', 'battery_level', 'latitude', 'longitude', 'altitude', 'setup_date', 'last_active_time']
 
 class CameraInfoDetailSerializer(serializers.ModelSerializer):
     ch_info = CentralHubSerializer(read_only=True)
@@ -104,7 +104,7 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 # Serializers define the API representation.
-class UploadSerializer(serializers.Serializer):
-    files_uploaded = serializers.ListField(child = serializers.FileField())
-    class Meta:
-        fields = ['files_uploaded']
+# class UploadSerializer(serializers.Serializer):
+    # files_uploaded = serializers.ListField(child = serializers.FileField())
+    # class Meta:
+    #     fields = ['files_uploaded']

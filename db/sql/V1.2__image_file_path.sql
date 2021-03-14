@@ -1,4 +1,4 @@
--- CREATE DATABASE wms;
+-- CREATE DATABASE IF NOT EXISTS wms;
 
 -- \c wms
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS image_info (
     image_id uuid UNIQUE DEFAULT uuid_generate_v4(),
     ori_file_path text,
     ext_file_path text,
-    size INT, -- [Bytes]
+    size DECIMAL, -- [Bytes]
     width INT, -- [px]
     height INT, -- [px]
     taken_camera_id uuid,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS extracted_data (
     viewed_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (record_id),
     FOREIGN KEY (type_id) REFERENCES wildlife_types,
-    FOREIGN KEY (image_id) REFERENCES image_info,
+    FOREIGN KEY (image_id) REFERENCES image_info
 );
 
 CREATE TABLE IF NOT EXISTS corrected_data (
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS corrected_data (
     type_id INT,
     user_id uuid,
     corrected_time TIMESTAMP,
-    PRIMARY KEY (extracted_id),
+    PRIMARY KEY (extracted_id, type_id),
     FOREIGN KEY (extracted_id) REFERENCES extracted_data,
     FOREIGN KEY (type_id) REFERENCES wildlife_types,
     FOREIGN KEY (user_id) REFERENCES user_info

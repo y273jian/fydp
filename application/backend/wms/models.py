@@ -75,7 +75,7 @@ class ImageInfo(models.Model):
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     taken_camera = models.ForeignKey(CameraInfo, models.CASCADE, related_name='image_infos', blank=True, null=True)
-    taken_time = models.DateTimeField(blank=True, auto_now_add=True)
+    taken_time = models.DateTimeField(blank=True, default=timezone.now)
 
     class Meta:
         managed = False

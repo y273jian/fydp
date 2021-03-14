@@ -20,7 +20,7 @@ export default class MapPage extends React.Component{
   }
   refreshList = () => {
     axiosInstance
-      .get('/api/cameras')
+      .get('/api/cameras/')
       .then(res => {
         res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
         console.log(res.data)
@@ -37,7 +37,8 @@ export default class MapPage extends React.Component{
     const markers = this.state.cameras.map((camera, index) => {
       // console.log(camera)
       return ({
-        name: 'camera'+index,
+        index: index,
+        name: camera.camera_alias!==''?camera.camera_alias:'camera'+index,
         latlng: [Number(camera.latitude), Number(camera.longitude)],
         camera_id: camera.camera_id,
         battery_level: camera.battery_level,
@@ -69,7 +70,7 @@ export default class MapPage extends React.Component{
     const PigeonMarkers = markers.map((marker, index) => (
       
       <Marker
-        key={`marker_${marker.name}`}
+        key={`marker_${marker.index}`}
         anchor={marker.latlng}
         payload={index}
         onClick={handleMarkerClick}
@@ -78,7 +79,7 @@ export default class MapPage extends React.Component{
     const PigeonOverlays = markers.map((marker, index) => (
       marker.show?<Overlay
         style={{zIndex: 1}} 
-        key={`overlay_${marker.name}`}
+        key={`overlay_${marker.index}`}
         anchor={marker.latlng}
         payload={index}
         offset={[0, 0]}>

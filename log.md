@@ -191,16 +191,35 @@ create send_files program
 save image
 2021-01-22 2:00 PM
 
+
+work on report: change ER Diagram
+2021-02-21 3:00 PM 4:00 PM
+
+
+2021-02-22 3:30 PM 
+
+update upload api, work on report
+2021-03-08 5:00 PM 12:00 PM
+
+work on report part 1 and meeting
+2021-03-09 5:00 PM 8:00 PM
+
+update database diagram
+work on demo
+2021-03-12 12:00 AM 2:00 AM
+
 aliceuw0507@gmail.com
 pw: WMS_testAcc0unt
 
+wmsalice2021@gmail.com
+pw: WMS_testAcc0unt
 
 - camera alert: no new updates after 24hrs
 - image corrected data
 
 
 # 2021-01-23 meeting
-? what is 'Battery Enable'
-? is central hub id a serial
-? can we get the ip of central hub
+? what is 'Battery Enable': has image or not
+? is central hub id a serial: yes
+? can we get the ip of central hub: we can
 ? get camera_id with image

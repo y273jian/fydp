@@ -63,14 +63,14 @@ class CameraDetailPage extends Component {
   handleDelete = camera => {
     console.log('handle delete', camera)
     axiosInstance
-      .delete(`/api/cameras/${camera.camera_id}`)
+      .delete(`/api/cameras/${camera.camera_id}/`)
   }
 
   refreshPage = (cameraId) => {
     // console.log(this.state.edit)
     if (this.state.created) {
       this.props.history.push({
-        pathname: `/cameras/${cameraId}`,
+        pathname: `/cameras/${cameraId}/`,
         state: {
           edit: false
         }
@@ -79,7 +79,7 @@ class CameraDetailPage extends Component {
     
     if (!this.state.edit) {
       axiosInstance
-        .get(`/api/cameras/${cameraId}`)
+        .get(`/api/cameras/${cameraId}/`)
         .then(res => {
           res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
           console.log(res.data)
@@ -109,6 +109,20 @@ class CameraDetailPage extends Component {
       // console.log('key',entry[0], 'value',entry[1])
       <Form>
         <FormGroup row>
+          <Label md={{ size: 3, offset: 2}} className='text-right'><b>Camera Alias: </b></Label>
+          {!this.state.edit ? (        
+            <Col md='5' className='col-form-label'>{camera.camera_alias!=''?`${camera.camera_alias}`:'no name'}</Col>
+          ) : (
+            <Col md='5'>
+              <Input 
+                value={camera.camera_alias} 
+                name='camera_alias'
+                onChange={this.handleChange}
+              />
+            </Col>
+          )}
+        </FormGroup>
+        <FormGroup row>
           <Label md={{ size: 3, offset: 2}} className='text-right'><b>Camera ID: </b></Label>
           {!this.state.edit ? (        
             <Col md='5' className='col-form-label'>{camera.camera_id!=''?`${camera.camera_id}`:'no record'}</Col>
@@ -133,7 +147,6 @@ class CameraDetailPage extends Component {
                 value={camera.serial_number} 
                 name='serial_number'
                 onChange={this.handleChange}
-                disabled
               />
             </Col>
           )}

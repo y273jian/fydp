@@ -1,4 +1,3 @@
-log
 .vscode
 venv
 **/__pycache__/**
@@ -7,3 +6,15 @@ venv
 *.pyc
 **/media
 application/backend/wms/__pycache__/views.cpython-38.pyc
+log.md
+sample.json
+application/frontend/package-lock.json
+
+application/frontend/.eslintcache
+
+send_files/central_hub
+send_files/extracted
+send_files/old
+send_files/01_04_2021_19_53_55.png
+send_files/01_04_2021_19_53_55.txt
+send_files/connect.sh

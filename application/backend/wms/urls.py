@@ -13,6 +13,5 @@ urlpatterns = [
     path('token/obtain/', ObtainTokenPairView.as_view(), name='token_create'),  # override sjwt stock token
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('blacklist/', LogoutAndBlacklistRefreshTokenForUserView.as_view(), name='blacklist'),
-    path('server/add_extracted_data', AddExtractedDataView.as_view(), name='add_extracted_data'),
-    path('server/add_image_info', AddImageInfoView.as_view(), name='add_image_info'),
+    # path('server/add_extracted_data', AddExtractedDataView.as_view(), name='add_extracted_data'),
 ]

@@ -19,6 +19,8 @@ from rest_framework import routers
 from wms import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
+
 
 router = routers.DefaultRouter()
 router.register(r'cameras', views.CameraView, 'camera')
@@ -26,7 +28,8 @@ router.register(r'central_hubs', views.CentralHubView, 'central_hub')
 router.register(r'images', views.ImageInfoView, 'image')
 router.register(r'extracted_data', views.ExtractedDataView, 'extracted_data')
 router.register(r'corrected_data', views.CorrectedDataView, 'corrected_data')
-router.register(r'upload', views.UploadViewSet, 'upload')
+router.register(r'server/upload_from_ch', views.ChUploadViewSet, 'upload_from_ch')
+router.register(r'server/upload_extracted_data', views.UploadExtDataViewSet, 'upload_extracted_data')
 
 urlpatterns = [
     path('admin/', admin.site.urls),    

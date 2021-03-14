@@ -43,7 +43,7 @@ export default class ChartsPage extends Component {
       .get('/api/extracted_data/')
       .then(res => {
         res.data = JSON.parse(JSON.stringify(res.data).replace(/null/g, '""'))
-        
+        console.log(res.data)
         this.setState({ extracted_data: this.groupByType(res.data) })
       })
       .catch(err => console.log(err))
@@ -65,7 +65,8 @@ export default class ChartsPage extends Component {
     
     for (const [key, value] of Object.entries(groupByType)) {
       let groupByDate= _.groupBy(value, (data) => {
-        var taken_date = moment(data.image.taken_time).format('YYYY-MM-DD')
+        var taken_date = moment(data.image.taken_time).utc().format('YYYY-MM-DD')
+        console.log(taken_date)
         return taken_date
       })
       const totals = _.map(groupByDate, (value, key) => {
@@ -158,7 +159,7 @@ export default class ChartsPage extends Component {
             </XYPlot>
           </Col>
           <Col md='2'>
-            <DiscreteColorLegend items={['Deer']}/>
+            <DiscreteColorLegend items={[`${this.state.type}`]}/>
           </Col>
         </Row>
         
