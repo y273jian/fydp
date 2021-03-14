@@ -1,0 +1,79 @@
+y2598wan@eceTesla0.uwaterloo.ca
+../tmp/y2598wan_fydp
+
+
+
+
+// current version used:  
+https://github.com/ultralytics/yolov3/tree/archive
+git clone -b archive https://github.com/ultralytics/yolov3
+
+// dataset url:
+https://github.com/YitianWang/y2598wan_fydp
+
+// useful info/tutorial/issue ticket: 
+https://github.com/ultralytics/yolov3/blob/archive/data/coco.names // all existing 80 class labels
+https://github.com/ultralytics/yolov3/wiki/Train-Custom-Data
+https://github.com/ultralytics/yolov3/issues/102 // single class training sample
+https://github.com/pjreddie/darknet/issues/1088 // add custom new class labels
+https://github.com/mathieuorhan/darknet/blob/master/README.md // darknet model
+https://github.com/pjreddie/darknet/issues/1878 // darknet VS. yolov3
+https://drive.google.com/drive/folders/1dZOoqhAned0FLF5fU0FsMWOpPQw_dYOe // additional deer dataset
+
+// Download file from GitHub:
+curl -LJO https://github.com/y273jian/fydp/object-detection/task_deer/obj_train_data/deer1.jpg // does NOT work...
+git clone https://github.com/YitianWang/y2598wan_fydp // WORKS!
+
+// return number of files in the current directory: 
+ls | wc -l
+
+// remove folder: 
+rm -f -r foldername
+
+// move files to another directory
+mv train2017/deer_txt/deer*.txt train2017
+
+// find a file with name
+find deer1.jpg 
+
+// copy output image to home directory: 
+cp -r output /home/y2598wan 
+cp -r yolov3 /home/y2598wan/
+
+// download image from server to local for view: 
+scp -r y2598wan@eceTesla0.uwaterloo.ca:~/output ~/Desktop/ 
+
+// edit file using vi or vim 
+// If you want to edit a file using terminal, press i to go into insert mode.
+// Edit your file and press ESC and then :w to save changes and :q to quit.
+// However, you can combine these two like :wq to write and quit the vim editor.
+
+
+// train:
+python3 train.py --data data/coco_deer.data --batch-size 4 --epochs 300 --nosave --cache-images --weights weights/yolov3-spp-ultralytics.pt --cfg cfg/yolov3-spp.cfg --name deercls
+
+python3 train.py --data data/coco_deer140.data --batch-size 4 --epochs 300 --nosave --cache-images --weights weights/yolov3-spp-ultralytics.pt  --cfg cfg/yolov3-spp.cfg --name deer114
+
+
+// detect:
+../yolov3 python3 detect.py --source data/samples/y2598wan_fydp/deer1.jpg --weights weights/last_deer140.pt --conf-thres 0.25
+
+python3 detect.py --source data/samples/deer_img_test --weights weights/last_deer140.pt --conf-thres 0.25 --save-txt
+
+
+// weights:
+yolov3-spp-ultralytics.pt (tested; work well; high performance)
+last_deer140.pt # trained weights
+
+
+
+// cfg:
+yolov3-spp.cfg
+
+
+
+*** yolov3-spp-ultralytics.pt & yolov3-spp.cfg // tested and works well !!!
+
+
+
+
