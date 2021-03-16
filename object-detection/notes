@@ -37,11 +37,11 @@ mv train2017/deer_txt/deer*.txt train2017
 find deer1.jpg 
 
 // copy output image to home directory: 
-cp -r output /home/y2598wan 
+cp -r output.zip /home/y2598wan 
 cp -r yolov3 /home/y2598wan/
 
 // download image from server to local for view: 
-scp -r y2598wan@eceTesla0.uwaterloo.ca:~/output ~/Desktop/ 
+scp -r y2598wan@eceTesla0.uwaterloo.ca:~/output.zip ~/Desktop/ 
 
 // edit file using vi or vim 
 // If you want to edit a file using terminal, press i to go into insert mode.
